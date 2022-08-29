@@ -87,7 +87,7 @@ export const getTimelinePosts = async (req, res) => {
     const currentUserPosts = await PostModel.find({ userId: userId });
 
     const followingPosts = await UserModel.aggregate([
-      { 
+      {
         $match: {
           _id: new mongoose.Types.ObjectId(userId),
         },
@@ -103,6 +103,8 @@ export const getTimelinePosts = async (req, res) => {
       {
         $project: {
           followingPosts: 1,
+          firstname: 1,
+          lastname: 1,
           _id: 0,
         },
       },

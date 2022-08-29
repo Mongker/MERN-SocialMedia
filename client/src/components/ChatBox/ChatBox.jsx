@@ -7,13 +7,44 @@ import { format } from "timeago.js";
 import InputEmoji from 'react-input-emoji'
 
 const ChatBox = ({ chat, currentUser, setSendMessage,  receivedMessage }) => {
+
+  // state
   const [userData, setUserData] = useState(null);
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
 
+  // ref
+  const scroll = useRef();
+  const imageRef = useRef();
+
+
+  // handle func
   const handleChange = (newMessage)=> {
     setNewMessage(newMessage)
   }
+
+  // Send Message
+  const handleSend = async(e)=> {
+    e?.preventDefault();
+    if(newMessage.length) {
+      const message = {
+        senderId : currentUser,
+        text: newMessage,
+        chatId: chat._id,
+      }
+      const receiverId = chat.members.find((id)=>id!==currentUser);
+      // send message to socket server
+      setSendMessage({...message, receiverId})
+      // send message to database
+      try {
+        const { data } = await addMessage(message);
+        setMessages([...messages, data]);
+        setNewMessage("");
+      } catch {console.log("error")
+      }
+    }
+  }
+
 
   // fetching data for header
   useEffect(() => {
@@ -50,44 +81,15 @@ const ChatBox = ({ chat, currentUser, setSendMessage,  receivedMessage }) => {
     scroll.current?.scrollIntoView({ behavior: "smooth" });
   },[messages])
 
+  // Receive Message from parent component
+  useEffect(()=> {
+    console.log("Message Arrived: ", receivedMessage)
+    if (receivedMessage !== null && receivedMessage.chatId === chat._id) {
+      setMessages([...messages, receivedMessage]);
+    }
 
+  },[receivedMessage])
 
-  // Send Message
-  const handleSend = async(e)=> {
-    e.preventDefault()
-    const message = {
-      senderId : currentUser,
-      text: newMessage,
-      chatId: chat._id,
-  }
-  const receiverId = chat.members.find((id)=>id!==currentUser);
-  // send message to socket server
-  setSendMessage({...message, receiverId})
-  // send message to database
-  try {
-    const { data } = await addMessage(message);
-    setMessages([...messages, data]);
-    setNewMessage("");
-  }
-  catch
-  {
-    console.log("error")
-  }
-}
-
-// Receive Message from parent component
-useEffect(()=> {
-  console.log("Message Arrived: ", receivedMessage)
-  if (receivedMessage !== null && receivedMessage.chatId === chat._id) {
-    setMessages([...messages, receivedMessage]);
-  }
-
-},[receivedMessage])
-
-
-
-  const scroll = useRef();
-  const imageRef = useRef();
   return (
     <>
       <div className="ChatBox-container">
@@ -96,7 +98,7 @@ useEffect(()=> {
             {/* chat-header */}
             <div className="chat-header">
               <div className="follower">
-                <div>
+                <div className={'cursor_pointer'}>
                   <img
                     src={
                       userData?.profilePicture
@@ -147,8 +149,9 @@ useEffect(()=> {
               <InputEmoji
                 value={newMessage}
                 onChange={handleChange}
+                onEnter={() => handleSend()}
               />
-              <div className="send-button button" onClick = {handleSend}>Send</div>
+              <div className="send-button button" onClick={handleSend}>Send</div>
               <input
                 type="file"
                 name=""
@@ -160,7 +163,7 @@ useEffect(()=> {
           </>
         ) : (
           <span className="chatbox-empty-message">
-            Tap on a chat to start conversation...
+            Chọn người bạn muốn nhắn tin
           </span>
         )}
       </div>

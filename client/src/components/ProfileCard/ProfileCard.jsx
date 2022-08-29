@@ -16,7 +16,7 @@ const ProfileCard = ({location}) => {
             user.coverPicture
               ? serverPublic + user.coverPicture
               : serverPublic + "defaultCover.jpg"
-          } alt="CoverImage" />
+          } alt="CoverImage" className={location === "profilePage" && 'image_cover'}/>
         <img
           src={
             user.profilePicture
@@ -27,8 +27,8 @@ const ProfileCard = ({location}) => {
         />
       </div>
       <div className="ProfileName">
-        <span>{user.firstname} {user.lastname}</span>
-        <span>{user.worksAt? user.worksAt : 'Write about yourself'}</span>
+        <span>{user.lastname} {user.firstname} </span>
+        <span>{user.relationship? user.relationship : 'Viết về bản thân'}</span>
       </div>
 
       <div className="followStatus">
@@ -38,7 +38,7 @@ const ProfileCard = ({location}) => {
             <span>{user.followers.length}</span>
             <span>Followers</span>
           </div>
-          <div className="vl"></div>
+          <div className="vl" />
           <div className="follow">
             <span>{user.following.length}</span>
             <span>Following</span>
@@ -46,7 +46,7 @@ const ProfileCard = ({location}) => {
           {/* for profilepage */}
           {location === "profilePage" && (
             <>
-              <div className="vl"></div>
+              <div className="vl" />
               <div className="follow">
                 <span>{
                 posts.filter((post)=>post.userId === user._id).length
@@ -63,8 +63,8 @@ const ProfileCard = ({location}) => {
         ""
       ) : (
         <span>
-          <Link to={`/profile/${user._id}`} style={{ textDecoration: "none", color: "inherit" }}>
-            My Profile
+          <Link to={`/profile/${user._id}`} style={{ textDecoration: "none", color: "var(--orange)" }}>
+            Thông tin của tôi
           </Link>
         </span>
       )}

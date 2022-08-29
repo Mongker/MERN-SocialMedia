@@ -72,7 +72,7 @@ const PostShare = () => {
       <div>
         <input
           type="text"
-          placeholder="What's happening?"
+          placeholder="Hãy kể cho ❤️TRUELOVE❤️ tâm sự của bạn?"
           required
           ref={desc}
         />

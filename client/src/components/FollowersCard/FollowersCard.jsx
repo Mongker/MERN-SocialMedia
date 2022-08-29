@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
-import "./FollowersCard.css";
 import FollowersModal from "../FollowersModal/FollowersModal";
 import { getAllUser } from "../../api/UserRequests";
 import User from "../User/User";
 import { useSelector } from "react-redux";
+
+import "./FollowersCard.css";
+
 const FollowersCard = ({ location }) => {
   const [modalOpened, setModalOpened] = useState(false);
   const [persons, setPersons] = useState([]);
@@ -19,7 +21,7 @@ const FollowersCard = ({ location }) => {
 
   return (
     <div className="FollowersCard">
-      <h3>People you may know</h3>
+      <h3>Những người bạn có thể biết</h3>
 
       {persons.map((person, id) => {
         if (person._id !== user._id) return <User person={person} key={id} />;

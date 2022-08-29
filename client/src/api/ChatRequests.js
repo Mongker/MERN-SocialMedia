@@ -1,9 +1,9 @@
-import axios from 'axios'
+import API from "./axiosBase";
 
-
-const API = axios.create({ baseURL: 'http://localhost:5000' });
-
-export const createChat = (data) => API.post('/chat/', data);
+export const createChat = (senderId, receiverId) => API.post('/chat/', {
+    "senderId": senderId,
+    "receiverId": receiverId,
+});
 
 export const userChats = (id) => API.get(`/chat/${id}`);
 

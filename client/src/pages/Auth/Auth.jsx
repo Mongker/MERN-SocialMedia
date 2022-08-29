@@ -56,13 +56,12 @@ const Auth = () => {
         <img src={Logo} alt="" />
 
         <div className="Webname">
-          <h1>ZKC Media</h1>
-          <h6>Explore the ideas throughout the world</h6>
+          <h1>TRUELOVE Social</h1>
+          <h6>Cùng nhau kết nối, cùng nhau phát triển</h6>
         </div>
       </div>
 
       {/* right form side */}
-
       <div className="a-right">
         <form className="infoForm authForm" onSubmit={handleSubmit}>
           <h3>{isSignUp ? "Register" : "Login"}</h3>

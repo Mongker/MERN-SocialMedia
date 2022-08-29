@@ -12,7 +12,7 @@ const Post = ({ data }) => {
   const [liked, setLiked] = useState(data.likes.includes(user._id));
   const [likes, setLikes] = useState(data.likes.length)
 
-  
+
   const handleLike = () => {
     likePost(data._id, user._id);
     setLiked((prev) => !prev);
@@ -20,10 +20,17 @@ const Post = ({ data }) => {
   };
   return (
     <div className="Post">
-      <img
-        src={data.image ? process.env.REACT_APP_PUBLIC_FOLDER + data.image : ""}
-        alt=""
-      />
+        <div className="detail">
+            <span>
+                <b>{data.name}</b>
+            </span>
+            <span>{data.desc}</span>
+        </div>
+        <img
+            src={data.image ? process.env.REACT_APP_PUBLIC_FOLDER + data.image : process.env.REACT_APP_PUBLIC_FOLDER + 'no-image-available.jpg'}
+            alt={`thumbnail` + data.image}
+            className={'thumbnail'}
+        />
 
       <div className="postReact">
         <img
@@ -39,12 +46,6 @@ const Post = ({ data }) => {
       <span style={{ color: "var(--gray)", fontSize: "12px" }}>
         {likes} likes
       </span>
-      <div className="detail">
-        <span>
-          <b>{data.name} </b>
-        </span>
-        <span>{data.desc}</span>
-      </div>
     </div>
   );
 };

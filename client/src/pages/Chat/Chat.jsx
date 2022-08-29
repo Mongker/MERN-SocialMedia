@@ -1,24 +1,61 @@
-import React, { useRef, useState } from "react";
+import socketIOClient from "socket.io-client";
+import React, { useRef, useState, useEffect } from "react";
+import { /* useDispatch, */ useSelector } from "react-redux";
+
+// api
+import { userChats, createChat } from "../../api/ChatRequests";
+
+// component
 import ChatBox from "../../components/ChatBox/ChatBox";
 import Conversation from "../../components/Coversation/Conversation";
 import LogoSearch from "../../components/LogoSearch/LogoSearch";
 import NavIcons from "../../components/NavIcons/NavIcons";
+
+// style
 import "./Chat.css";
-import { useEffect } from "react";
-import { userChats } from "../../api/ChatRequests";
-import { useDispatch, useSelector } from "react-redux";
-import { io } from "socket.io-client";
 
 const Chat = () => {
-  const dispatch = useDispatch();
   const socket = useRef();
+  const isCallAPICreateChatRef = useRef(false);
   const { user } = useSelector((state) => state.authReducer.authData);
 
-  const [chats, setChats] = useState([]);
+  const [chats, setChats] = useState({});
   const [onlineUsers, setOnlineUsers] = useState([]);
   const [currentChat, setCurrentChat] = useState(null);
   const [sendMessage, setSendMessage] = useState(null);
   const [receivedMessage, setReceivedMessage] = useState(null);
+
+  const addChat = async (receiverId) => {
+    try {
+      const {data} = await createChat(user._id, receiverId);
+      if(data) {
+        setChats((prevState) => {
+          prevState[receiverId] = data;
+          return {...prevState};
+        })
+        setCurrentChat(data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    // const
+    const url = new URL(window.location.href);
+    const searchParams = new URLSearchParams(url.search);
+    const receiverId = searchParams.get('receiverId')
+    const arrayChat =  Object.keys(chats);
+    if(receiverId && arrayChat.length > 0 && !isCallAPICreateChatRef.current) {
+      isCallAPICreateChatRef.current = true
+      if(arrayChat.includes(receiverId)) {
+        setCurrentChat(chats[receiverId]);
+      } else {
+        addChat(receiverId).then()
+      }
+    }
+  }, [chats])
+
   // Get the chat in chat section
   useEffect(() => {
     const getChats = async () => {
@@ -34,7 +71,9 @@ const Chat = () => {
 
   // Connect to Socket.io
   useEffect(() => {
-    socket.current = io("ws://localhost:8800");
+    const server = process.env.SERVER_API_CHAT;
+    socket.current = socketIOClient.connect(server);
+    // socket.current = socketIOClient.connect(server);
     socket.current.emit("new-user-add", user._id);
     socket.current.on("get-users", (users) => {
       setOnlineUsers(users);
@@ -43,7 +82,7 @@ const Chat = () => {
 
   // Send Message to socket server
   useEffect(() => {
-    if (sendMessage!==null) {
+    if (sendMessage !== null) {
       socket.current.emit("send-message", sendMessage);}
   }, [sendMessage]);
 
@@ -53,16 +92,17 @@ const Chat = () => {
     socket.current.on("recieve-message", (data) => {
       console.log(data)
       setReceivedMessage(data);
-    }
-
-    );
+    });
+    return () => {
+      socket.current.disconnect();
+    };
   }, []);
 
 
   const checkOnlineStatus = (chat) => {
     const chatMember = chat.members.find((member) => member !== user._id);
     const online = onlineUsers.find((user) => user.userId === chatMember);
-    return online ? true : false;
+    return !!online;
   };
 
   return (
@@ -73,7 +113,7 @@ const Chat = () => {
         <div className="Chat-container">
           <h2>Chats</h2>
           <div className="Chat-list">
-            {chats.map((chat) => (
+            {Object.values(chats).map((chat) => (
               <div
                 onClick={() => {
                   setCurrentChat(chat);
@@ -91,7 +131,6 @@ const Chat = () => {
       </div>
 
       {/* Right Side */}
-
       <div className="Right-side-chat">
         <div style={{ width: "20rem", alignSelf: "flex-end" }}>
           <NavIcons />

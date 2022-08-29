@@ -37,6 +37,10 @@
   gap: 10px;
 }
 
+.image_cover {
+  height: 300px;
+}
+
 .ProfileName > span:nth-of-type(1) {
   font-weight: bold;
 }

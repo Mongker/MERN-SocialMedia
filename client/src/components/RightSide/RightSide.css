@@ -4,11 +4,11 @@
     gap: 2rem;
 }
 
-
 .navIcons{
     margin-top: 1rem;
     display: flex;
-    justify-content: space-between;
+    justify-content: space-evenly;
+    cursor: pointer;
 }
 
 .navIcons>a>img{

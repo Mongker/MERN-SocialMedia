@@ -17,7 +17,16 @@ export const userChats = async (req, res) => {
     const chat = await ChatModel.find({
       members: { $in: [req.params.userId] },
     });
-    res.status(200).json(chat);
+    const arrayToObject = (chat = []) => {
+      let objectData = {};
+      for (let i = 0; i < chat.length; i++) {
+        const itemIdsMember = chat[i].members.find(item => item !== req.params.userId)
+        objectData[itemIdsMember] = chat[i];
+      }
+      return objectData;
+    }
+    const data = arrayToObject(chat)
+    res.status(200).json(data);
   } catch (error) {
     res.status(500).json(error);
   }

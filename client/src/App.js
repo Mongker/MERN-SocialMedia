@@ -18,20 +18,20 @@ function App() {
             : "auto",
       }}
     >
-      <div className="blur" style={{ top: "-18%", right: "0" }}></div>
-      <div className="blur" style={{ top: "36%", left: "-8rem" }}></div>
+      <div className="blur" style={{ top: "-18%", right: "0" }} />
+      <div className="blur" style={{ top: "36%", left: "-8rem" }} />
       <Routes>
         <Route
           path="/"
-          element={user ? <Navigate to="home" /> : <Navigate to="auth" />}
+          element={user ? <Navigate to="newfeed" /> : <Navigate to="auth" />}
         />
         <Route
-          path="/home"
+          path="/newfeed"
           element={user ? <Home /> : <Navigate to="../auth" />}
         />
         <Route
           path="/auth"
-          element={user ? <Navigate to="../home" /> : <Auth />}
+          element={user ? <Navigate to="../newfeed" /> : <Auth />}
         />
         <Route
           path="/profile/:id"

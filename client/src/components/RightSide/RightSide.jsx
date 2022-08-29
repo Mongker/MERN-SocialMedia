@@ -10,8 +10,8 @@ const RightSide = () => {
   return (
     <div className="RightSide">
       {/* Side Navbar */}
-
       <NavIcons />
+
       {/* TrendCard */}
       <TrendCard />
 

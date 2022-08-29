@@ -38,7 +38,7 @@ const InfoCard = () => {
   return (
     <div className="InfoCard">
       <div className="infoHead">
-        <h4>Profile Info</h4>
+        <h4>Thông tin hồ sơ</h4>
         {user._id === profileUserId ? (
           <div>
             <UilPen
@@ -60,21 +60,21 @@ const InfoCard = () => {
       <div className="info">
         {/* */}
         <span>
-          <b>Status </b>
+          <b>Trạng thái: </b>
         </span>
-        <span>{profileUser.relationship}</span>
+        <span>{profileUser.relationship ? profileUser.relationship : 'Chưa cập nhật'}</span>
       </div>
       <div className="info">
         <span>
-          <b>Lives in </b>
+          <b>Đang ở:  </b>
         </span>
-        <span>{profileUser.livesIn}</span>
+        <span>{profileUser.livesIn ? profileUser.livesIn : 'Chưa cập nhật'}</span>
       </div>
       <div className="info">
         <span>
-          <b>Works at </b>
+          <b>Làm việc tại </b>
         </span>
-        <span>{profileUser.worksAt}</span>
+        <span>{profileUser.worksAt ? profileUser.worksAt : 'Chưa cập nhật'}</span>
       </div>
 
       <button className="button logout-button" onClick={handleLogOut}>Log Out</button>
